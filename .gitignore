@@ -1,0 +1,26 @@
+# entorno virtual de python
+venv/
+
+# archivos temporales de python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# configuraciones locales
+.env
+.env.*
+
+# archivos generados por django
+db.sqlite3
+staticfiles/
+
+# archivos generados por graphviz
+*.dot
+*.svg
+
+# configuraciones del editor
+.vscode/
+
+# archivos del sistema operativo
+.DS_Store
+Thumbs.db
