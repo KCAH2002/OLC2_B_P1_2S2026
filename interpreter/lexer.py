@@ -31,6 +31,9 @@ tokens = [
     "DECIMAL",
     "STRING_LITERAL",
     "UNCLOSED_STRING",
+    "CHAR_LITERAL",
+    "INVALID_CHAR_LITERAL",
+    "UNCLOSED_CHAR_LITERAL",
     "BLOCK_COMMENT",
     "UNCLOSED_BLOCK_COMMENT",
     "LBRACE",
@@ -99,6 +102,58 @@ def t_LINE_COMMENT(token):
     r"//[^\n]*"
 
     # los comentarios de linea no generan tokens
+    pass
+
+
+def t_CHAR_LITERAL(token):
+    r"'([^'\\\n]|\\.)'"
+
+    # aqui quito las comillas simples que rodean el caracter
+    token.value = token.value[1:-1]
+
+    # retorno el caracter para agregarlo al resultado
+    return token
+
+
+def t_INVALID_CHAR_LITERAL(token):
+    r"'([^'\\\n]|\\.)*'"
+
+    # aqui guardo la posicion donde comenzo el literal
+    column = find_column(token.lexer.lexdata, token)
+
+    # aqui registro que el literal no contiene exactamente un caracter
+    lexical_errors.append(
+        {
+            "type": "lexical",
+            "description": "El literal de caracter debe contener un solo caracter.",
+            "line": token.lineno,
+            "column": column,
+            "fragment": token.value,
+        }
+    )
+
+    # no retorno el token porque el literal no es valido
+    pass
+
+
+def t_UNCLOSED_CHAR_LITERAL(token):
+    r"'([^'\\\n]|\\.)*(?=\n|$)"
+
+    # aqui guardo la posicion donde comenzo el literal
+    column = find_column(token.lexer.lexdata, token)
+
+    # aqui registro que falta la comilla simple de cierre
+    lexical_errors.append(
+        {
+            "type": "lexical",
+            "description": "El literal de caracter no tiene cierre.",
+            "line": token.lineno,
+            "column": column,
+            "fragment": token.value,
+        }
+    )
+
+    # no retorno el token porque el literal esta incompleto
     pass
 
 
@@ -228,13 +283,20 @@ def analyze_tokens(source):
     }
 
 
+
+
 if __name__ == "__main__":
-    # aqui preparo una cadena sin cerrar para revisar el error
-    test_source = '''
+    # aqui preparo varios caracteres validos para probar mi lexer
+    test_source = r"""
 fn main {
-    let mensaje "Esta cadena no tiene cierre
+    let letra 'a'
+    let numero '7'
+    let espacio ' '
+    let salto '\n'
+    let comilla '\''
+    let diagonal '\\'
 }
-'''
+"""
 
     # aqui mando el texto al lexer
     result = analyze_tokens(test_source)
