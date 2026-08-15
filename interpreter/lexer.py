@@ -29,6 +29,8 @@ tokens = [
     "IDENTIFIER",
     "INTEGER",
     "DECIMAL",
+    "STRING_LITERAL",
+    "UNCLOSED_STRING",
     "BLOCK_COMMENT",
     "UNCLOSED_BLOCK_COMMENT",
     "LBRACE",
@@ -97,6 +99,37 @@ def t_LINE_COMMENT(token):
     r"//[^\n]*"
 
     # los comentarios de linea no generan tokens
+    pass
+
+
+def t_STRING_LITERAL(token):
+    r'"([^"\\\n]|\\.)*"'
+
+    # aqui quito las comillas que rodean la cadena
+    token.value = token.value[1:-1]
+
+    # retorno la cadena para agregarla al resultado
+    return token
+
+
+def t_UNCLOSED_STRING(token):
+    r'"([^"\\\n]|\\.)*(?=\n|$)'
+
+    # aqui guardo la posicion donde comenzo la cadena
+    column = find_column(token.lexer.lexdata, token)
+
+    # aqui registro el problema para mostrarlo despues
+    lexical_errors.append(
+        {
+            "type": "lexical",
+            "description": "La cadena de texto no tiene cierre.",
+            "line": token.lineno,
+            "column": column,
+            "fragment": token.value,
+        }
+    )
+
+    # no retorno el token porque la cadena esta incompleta
     pass
 
 
@@ -195,17 +228,13 @@ def analyze_tokens(source):
     }
 
 
-
-
 if __name__ == "__main__":
-    # aqui pruebo numeros junto con identificadores que tambien tienen digitos
-    test_source = """
+    # aqui preparo una cadena sin cerrar para revisar el error
+    test_source = '''
 fn main {
-    let variable_1 100
-    let nota2 75.50
-    let valor123 123
+    let mensaje "Esta cadena no tiene cierre
 }
-"""
+'''
 
     # aqui mando el texto al lexer
     result = analyze_tokens(test_source)
