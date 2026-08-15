@@ -24,10 +24,11 @@ reserved = {
     "String": "TYPE_STRING",
 }
 
-
 # aqui coloco todos los tokens que mi lexer puede reconocer
 tokens = [
     "IDENTIFIER",
+    "INTEGER",
+    "DECIMAL",
     "BLOCK_COMMENT",
     "UNCLOSED_BLOCK_COMMENT",
     "LBRACE",
@@ -97,6 +98,26 @@ def t_LINE_COMMENT(token):
 
     # los comentarios de linea no generan tokens
     pass
+
+
+def t_DECIMAL(token):
+    r"\d+\.\d+"
+
+    # aqui convierto el texto reconocido en un numero decimal de python
+    token.value = float(token.value)
+
+    # retorno el token para agregarlo al resultado
+    return token
+
+
+def t_INTEGER(token):
+    r"\d+"
+
+    # aqui convierto el texto reconocido en un numero entero de python
+    token.value = int(token.value)
+
+    # retorno el token para agregarlo al resultado
+    return token
 
 
 def t_IDENTIFIER(token):
@@ -173,20 +194,16 @@ def analyze_tokens(source):
         "errors": lexical_errors.copy(),
     }
 
+
+
+
 if __name__ == "__main__":
-    # aqui preparo un ejemplo valido para probar mi lexer
+    # aqui pruebo numeros junto con identificadores que tambien tienen digitos
     test_source = """
 fn main {
-    // comentario de una linea
-    let edad
-    let mut Edad
-    let activo
-    if true
-    while false
-
-    /*
-    comentario de varias lineas
-    */
+    let variable_1 100
+    let nota2 75.50
+    let valor123 123
 }
 """
 
