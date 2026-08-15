@@ -11,7 +11,7 @@ def health_check(request):
     return JsonResponse(
         {
             "success": True,
-            "message": "La API de OxigenScript está funcionando correctamente.",
+            "message": "La API de OxigenScript esta funcionando correctamente.",
         }
     )
 
@@ -41,7 +41,7 @@ def analyze_code(request):
         return JsonResponse(
             {
                 "success": False,
-                "message": "El cuerpo de la solicitud no contiene un JSON válido.",
+                "message": "El cuerpo de la solicitud no contiene un JSON valido.",
             },
             status=400,
         )
@@ -64,7 +64,7 @@ def analyze_code(request):
         return JsonResponse(
             {
                 "success": False,
-                "message": "El código fuente no puede estar vacío.",
+                "message": "El código fuente no puede estar vacio.",
             },
             status=400,
         )
@@ -73,7 +73,7 @@ def analyze_code(request):
     return JsonResponse(
         {
             "success": True,
-            "message": "El código fue recibido correctamente.",
+            "message": "El codigo fue recibido correctamente.",
             "code": code,
         },
         status=200,
