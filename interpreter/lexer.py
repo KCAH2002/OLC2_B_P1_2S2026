@@ -36,8 +36,16 @@ tokens = [
     "UNCLOSED_CHAR_LITERAL",
     "BLOCK_COMMENT",
     "UNCLOSED_BLOCK_COMMENT",
+    "LPAREN",
+    "RPAREN",
     "LBRACE",
     "RBRACE",
+    "LBRACKET",
+    "RBRACKET",
+    "SEMICOLON",
+    "COMMA",
+    "COLON",
+    "DOT",
 ] + list(reserved.values())
 
 
@@ -48,9 +56,20 @@ lexical_errors = []
 # aqui le digo a ply que ignore espacios, tabulaciones y retornos de carro
 t_ignore = " \t\r"
 
-# con estas reglas reconozco las llaves de apertura y cierre
+# con estas reglas reconozco los signos de agrupacion
+t_LPAREN = r"\("
+t_RPAREN = r"\)"
 t_LBRACE = r"\{"
 t_RBRACE = r"\}"
+t_LBRACKET = r"\["
+t_RBRACKET = r"\]"
+
+
+# con estas reglas reconozco los signos de puntuacion
+t_SEMICOLON = r";"
+t_COMMA = r","
+t_COLON = r":"
+t_DOT = r"\."
 
 
 def find_column(source, token):
@@ -286,17 +305,13 @@ def analyze_tokens(source):
 
 
 if __name__ == "__main__":
-    # aqui preparo varios caracteres validos para probar mi lexer
-    test_source = r"""
-fn main {
-    let letra 'a'
-    let numero '7'
-    let espacio ' '
-    let salto '\n'
-    let comilla '\''
-    let diagonal '\\'
-}
-"""
+    # aqui preparo varios signos para comprobar que el lexer los reconoce
+    test_source = """
+    85.75
+    85 . 75
+    objeto.metodo
+    12.0
+    """
 
     # aqui mando el texto al lexer
     result = analyze_tokens(test_source)
