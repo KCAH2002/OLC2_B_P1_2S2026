@@ -362,22 +362,53 @@ def analyze_tokens(source):
 
 
 if __name__ == "__main__":
-    # aqui preparo funciones con diferentes tipos de retorno
-    test_source = """
+    # aqui preparo un programa completo para probar todas mis reglas
+    test_source = r"""
+// esta funcion suma dos numeros enteros
 fn sumar(a: i32, b: i32) -> i32 {
     return a + b;
 }
 
-fn promedio(a: f64, b: f64) -> f64 {
-    return (a + b) / 2.0;
-}
+/*
+aqui pruebo variables, operadores,
+condiciones, ciclos y diferentes literales
+*/
+fn main() {
+    let mut edad: i32 = 23;
+    let promedio: f64 = 85.75;
+    let activo: bool = true;
+    let nombre: String = "Claire";
+    let inicial: char = 'C';
+    let salto: char = '\n';
+    let numeros = [10, 20, 30];
 
-fn es_mayor(a: i32, b: i32) -> bool {
-    return a > b;
-}
+    edad += 1;
+    promedio = promedio / 2.0;
 
-fn obtener_nombre() -> String {
-    return "Claire";
+    if activo && edad >= 18 {
+        nombre = nombre.to_uppercase();
+    } else {
+        nombre = "Sin acceso";
+    }
+
+    while edad < 30 {
+        edad += 1;
+
+        if edad == 25 {
+            continue;
+        }
+
+        if edad > 28 {
+            break;
+        }
+    }
+
+    loop {
+        activo = !false;
+        break;
+    }
+
+    return;
 }
 """
 
@@ -390,8 +421,14 @@ fn obtener_nombre() -> String {
     for generated_token in result["tokens"]:
         print(generated_token)
 
+    print("\nTOTAL DE TOKENS")
+    print(len(result["tokens"]))
+
     print("\nERRORES ENCONTRADOS")
 
     # aqui muestro cada error encontrado
     for error in result["errors"]:
         print(error)
+
+    print("\nTOTAL DE ERRORES")
+    print(len(result["errors"]))
