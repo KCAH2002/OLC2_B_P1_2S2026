@@ -46,6 +46,26 @@ tokens = [
     "COMMA",
     "COLON",
     "DOT",
+    "PLUS",
+    "MINUS",
+    "TIMES",
+    "DIVIDE",
+    "MODULO",
+    "ASSIGN",
+    "PLUS_ASSIGN",
+    "MINUS_ASSIGN",
+    "TIMES_ASSIGN",
+    "DIVIDE_ASSIGN",
+    "MODULO_ASSIGN",
+    "EQUAL",
+    "NOT_EQUAL",
+    "LESS_THAN",
+    "GREATER_THAN",
+    "LESS_EQUAL",
+    "GREATER_EQUAL",
+    "AND",
+    "OR",
+    "NOT",
 ] + list(reserved.values())
 
 
@@ -70,6 +90,38 @@ t_SEMICOLON = r";"
 t_COMMA = r","
 t_COLON = r":"
 t_DOT = r"\."
+
+
+# aqui reconozco los operadores que calculan valores
+t_PLUS = r"\+"
+t_MINUS = r"-"
+t_TIMES = r"\*"
+t_DIVIDE = r"/"
+t_MODULO = r"%"
+
+
+# aqui reconozco las asignaciones normales y combinadas
+t_PLUS_ASSIGN = r"\+="
+t_MINUS_ASSIGN = r"-="
+t_TIMES_ASSIGN = r"\*="
+t_DIVIDE_ASSIGN = r"/="
+t_MODULO_ASSIGN = r"%="
+t_ASSIGN = r"="
+
+
+# aqui reconozco los operadores que comparan dos valores
+t_EQUAL = r"=="
+t_NOT_EQUAL = r"!="
+t_LESS_EQUAL = r"<="
+t_GREATER_EQUAL = r">="
+t_LESS_THAN = r"<"
+t_GREATER_THAN = r">"
+
+
+# aqui reconozco los operadores que trabajan con condiciones
+t_AND = r"&&"
+t_OR = r"\|\|"
+t_NOT = r"!"
 
 
 def find_column(source, token):
@@ -305,13 +357,22 @@ def analyze_tokens(source):
 
 
 if __name__ == "__main__":
-    # aqui preparo varios signos para comprobar que el lexer los reconoce
+    # aqui preparo operaciones aritmeticas y asignaciones
     test_source = """
-    85.75
-    85 . 75
-    objeto.metodo
-    12.0
-    """
+fn main() {
+    let mut resultado = 10 + 5;
+    resultado = resultado - 2;
+    resultado = resultado * 3;
+    resultado = resultado / 4;
+    resultado = resultado % 2;
+
+    resultado += 1;
+    resultado -= 1;
+    resultado *= 2;
+    resultado /= 2;
+    resultado %= 3;
+}
+"""
 
     # aqui mando el texto al lexer
     result = analyze_tokens(test_source)
