@@ -66,6 +66,7 @@ tokens = [
     "AND",
     "OR",
     "NOT",
+    "ARROW",
 ] + list(reserved.values())
 
 
@@ -122,6 +123,10 @@ t_GREATER_THAN = r">"
 t_AND = r"&&"
 t_OR = r"\|\|"
 t_NOT = r"!"
+
+
+# aqui reconozco la flecha que indica el tipo de retorno
+t_ARROW = r"->"
 
 
 def find_column(source, token):
@@ -357,20 +362,22 @@ def analyze_tokens(source):
 
 
 if __name__ == "__main__":
-    # aqui preparo operaciones aritmeticas y asignaciones
+    # aqui preparo funciones con diferentes tipos de retorno
     test_source = """
-fn main() {
-    let mut resultado = 10 + 5;
-    resultado = resultado - 2;
-    resultado = resultado * 3;
-    resultado = resultado / 4;
-    resultado = resultado % 2;
+fn sumar(a: i32, b: i32) -> i32 {
+    return a + b;
+}
 
-    resultado += 1;
-    resultado -= 1;
-    resultado *= 2;
-    resultado /= 2;
-    resultado %= 3;
+fn promedio(a: f64, b: f64) -> f64 {
+    return (a + b) / 2.0;
+}
+
+fn es_mayor(a: i32, b: i32) -> bool {
+    return a > b;
+}
+
+fn obtener_nombre() -> String {
+    return "Claire";
 }
 """
 
